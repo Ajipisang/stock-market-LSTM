@@ -20,7 +20,7 @@ need env file
 
 ```bash
   API_KEY=your_alpha_vantage_api_key
-  FOLDER=your_output_folder_path
+  FOLDER=your_output_folder_path (copy data_csv absolute path)
 ```
 
 
