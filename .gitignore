@@ -1,0 +1,8 @@
+# Abaikan file .env
+.env
+
+# Abaikan file pycache dan lingkungan virtual
+__pycache__/
+*.pyc
+env/
+venv/
