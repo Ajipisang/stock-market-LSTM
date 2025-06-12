@@ -18,7 +18,7 @@ def getCompanyList(queryName=""):
         if(data["bestMatches"]):
             for index,item in enumerate(data["bestMatches"],start=1):
                 # print(item)
-                print(f"{index}. symbol : {item["1. symbol"]} \n name:{item["2. name"]}")
+                print(f"{index}. symbol : {item["1. symbol"]} \n name:{item["2. name"]} \n region={item["4. region"]}")
 
             choice=int(input("masukkan angka perusahaan yang mau di cetak ke csv >>>"))
 

@@ -18,13 +18,16 @@ def printCsv(data,symbol="meta"):
     rows=[]
     # ambil nilai tanggal dan nilai harga terendah
     for date,detail in data.items():
+        openPrice=detail["1. open"]
+        highPrice=detail["2. high"]
         lowPrice=detail["3. low"]
-        rows.append([date,lowPrice])
+        closePrice=detail["4. close"]
+        rows.append([date,openPrice,highPrice,lowPrice,closePrice])
     rows.sort()
     # Tulis ke file CSV
     with open(file_path, mode="w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["tanggal", "low price"])  # Header
+        writer.writerow(["tanggal", "open price","high price","low price","close price"])  # Header
         writer.writerows(rows)
 
     subprocess.Popen(f'explorer /select,"{file_path}"')
