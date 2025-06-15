@@ -1,34 +1,44 @@
 from dotenv import load_dotenv
 import os
+import time
+from  predict_model.helpers.clear_screen import  clear_screen
 import requests
-from arima_model.api_services.get_stock_price import get_price
+from predict_model.api_services.get_stock_price import get_price
 # load file env
 load_dotenv()
+from yahooquery import search
 
 api_key = os.getenv("API_KEY")
 
 
 def getCompanyList(queryName=""):
-    url =f"https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={queryName}&apikey={api_key}"  # Contoh API publik
+    while True:
+        result = search(queryName)
 
-    response = requests.get(url)  # Kirim GET request ke url
+        if result:
+            if result["quotes"]:
+                print(f"\033[92mlist hasil pencarian untuk {queryName} : \033[0m")
+                for index, item in enumerate(result['quotes']):
+                    print(
+                        f"\033[36m{index + 1}.{item['longname'] if 'longname' in item else 'none'}\033[0m \nsimbol : {item['symbol'] or "none"} \nsektor  : {item['sector'] if 'sector' in item else 'none'}")
 
-    if response.status_code == 200:
-        data = response.json()  # Konversi respons ke format JSON
-        if(data["bestMatches"]):
-            for index,item in enumerate(data["bestMatches"],start=1):
-                # print(item)
-                print(f"{index}. symbol : {item["1. symbol"]} \n name:{item["2. name"]} \n region={item["4. region"]}")
 
-            choice=int(input("masukkan angka perusahaan yang mau di cetak ke csv >>>"))
-
-            selectedSymbol=data["bestMatches"][choice-1]
-
-            get_price(selectedSymbol['1. symbol'])
+                choice = input("\033[96minput angka perusahaan yang mau di cetak ke csv (tekan enter untuk keluar) >>>\033[0m")
+                if choice.strip() == "":
+                    break  # atau return kalau ingin kembali langsung
+                try:
+                    choice = int(choice)
+                    if 0 < choice < len(result["quotes"]):
+                        selectedSymbol = result["quotes"][choice - 1]
+                        return selectedSymbol['symbol']
+                    else:
+                        print("input di luar list")
+                        continue
+                except ValueError:
+                    print("input hanya boleh angka !")
+                    continue
+            else:
+                print("tidak ditemukan data")
         else:
-            print("tidak ditemukan data")
-    else:
-        print("Gagal mengambil data. Kode:", response.status_code)
+            print("Gagal mengambil data")
 
-if __name__ == "__main__":
-    getCompanyList()
