@@ -23,8 +23,9 @@ def getCompanyList(queryName=""):
                         f"\033[36m{index + 1}.{item['longname'] if 'longname' in item else 'none'}\033[0m \nsimbol : {item['symbol'] or "none"} \nsektor  : {item['sector'] if 'sector' in item else 'none'}")
 
 
-                choice = input("\033[96minput angka perusahaan yang mau di cetak ke csv (tekan enter untuk keluar) >>>\033[0m")
-                if choice.strip() == "":
+                choice = input("\033[96minput angka perusahaan yang mau di cetak ke csv (tekan enter untuk kembali ke input) >>>\033[0m")
+                if choice == "":
+                    return ""
                     break  # atau return kalau ingin kembali langsung
                 try:
                     choice = int(choice)

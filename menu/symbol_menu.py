@@ -16,12 +16,18 @@ def printCompanyCsv():
     time.sleep(1)
     clear_screen()
     while True:
-        queryName=str(input("input masukkan nama perusahaan  >> (mis : meta)"))
+        queryName=str(input("input masukkan nama perusahaan  >> (mis : meta) (tekan exit untuk keluar)"))
+        if queryName =="":
+            print("kembali ke menu utama ...")
+            break
         if(len(queryName) !=0):
             company_symbol=getCompanyList(queryName)
-            user_start_date = get_valid_date("Input tanggal mulai (yyyy-mm-dd) >>> ")
-            user_end_date = get_valid_date("Input tanggal akhir(yyyy-mm-dd) >>> ")
-            get_price(company_symbol,user_start_date=user_start_date,user_end_date=user_end_date)
+            if company_symbol != "":
+                user_start_date = get_valid_date("Input tanggal mulai (yyyy-mm-dd) >>> ")
+                user_end_date = get_valid_date("Input tanggal akhir(yyyy-mm-dd) >>> ")
+                get_price(company_symbol, user_start_date=user_start_date, user_end_date=user_end_date)
+            else:
+                continue
         else:
             print("mohon masukkan input yang valid")
             continue
