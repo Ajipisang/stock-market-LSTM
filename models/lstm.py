@@ -4,6 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 from  keras.layers import  LSTM,Dense
 from tensorflow.keras.callbacks import EarlyStopping,ReduceLROnPlateau
 import pandas as pd
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -21,6 +22,7 @@ def set_seed(seed=123):
 set_seed(128)
 
 def predict_using_lstm(data):
+
     # ubah index data mentah  ke date time agar bisa diolah
     data.index = pd.to_datetime(data.index)
 
@@ -109,7 +111,7 @@ def predict_using_lstm(data):
     #Berhenti otomatis kalau model udah gak membaik setelah 5 kali epoch
     # yang di pantau adalah loss nya
     # loss menunjukan seberapa jauh hasil prediksi dengan training datanya
-    early_stop = EarlyStopping(monitor='loss', patience=5)
+    early_stop = EarlyStopping(monitor='loss', patience=10)
 
 
     # Menurunkan nilai learning rate saat performa model stagnant
@@ -193,7 +195,14 @@ def predict_using_lstm(data):
 
     last_60_days = scaled_data[-60:]
     input_seq = last_60_days.reshape(1, 60, 1)
-
+    Y_test_scaled_back = scaler.inverse_transform(scaled_data[training_data_len:].reshape(-1, 1))
+    rmse = np.sqrt(mean_squared_error(Y_test_scaled_back, predictions))
+    mae = mean_absolute_error(Y_test_scaled_back, predictions)
+    r2 = r2_score(Y_test_scaled_back, predictions)
+    print("\n\033[92m=== Evaluasi Model ===\033[0m")
+    print(f"RMSE (Root Mean Squared Error): {rmse:.4f}")
+    print(f"MAE  (Mean Absolute Error):     {mae:.4f}")
+    print(f"R² Score:                       {r2:.4f}")
 
     while True:
         user_input = input("\033[96minput hari ke berapa yang mau di prediksi (ketik enter untuk exit) >>>\033[0m")
@@ -215,6 +224,7 @@ def predict_using_lstm(data):
 
             # ini membalik harga yang di scale ke harga normal
             pred_day = scaler.inverse_transform(np.array([[pred]]))[0][0]
+
             print(
                 f"Prediksi harga saham pada hari ke-{user_input} setelah data terakhir: \033[36m${pred_day:.2f}\033[0m")
             continue

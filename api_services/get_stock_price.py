@@ -8,7 +8,7 @@ import yfinance as yf
 # load file env
 load_dotenv()
 
-api_key = os.getenv("API_KEY")
+
 folderName=os.getenv("FOLDER")
 
 

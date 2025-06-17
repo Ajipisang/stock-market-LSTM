@@ -40,6 +40,7 @@ def getCompanyList(queryName=""):
                     continue
             else:
                 print("tidak ditemukan data")
+                break
         else:
             print("Gagal mengambil data")
 
